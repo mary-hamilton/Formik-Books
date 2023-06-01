@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import AxiosClient from "./AxiosClient";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App people={['Jonny', 'Dougie', 'Christan', 'Dan', 'Danny', 'Kian']}/>
+  <AxiosClient/>
 );

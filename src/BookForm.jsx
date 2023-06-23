@@ -1,16 +1,21 @@
 import {Field, Form, Formik} from 'formik';
 import * as Yup from 'yup';
 
-import {Button, Grid, Typography} from '@mui/material';
+import {Button, Grid, MenuItem, Typography} from '@mui/material';
 
-import {TextField} from 'formik-mui';
+import {Select, TextField} from 'formik-mui';
 import {useContext} from "react";
 import AppContext from "./context";
 
 
-const BookForm = ({ getBooks}) => {
+const BookForm = ({ getBooks, authors, categories }) => {
+
 
     const {client} = useContext(AppContext);
+    if (authors.length === 0) {
+        return (<p>you have no authors in your pathetic tiny Library</p>)
+    }
+
 
     return (
         <>
@@ -18,8 +23,8 @@ const BookForm = ({ getBooks}) => {
                 initialValues={{
                     title: '',
                     synopsis: '',
-                    categoryId: '',
-                    authorId: ''
+                    categoryId: categories[0].id,
+                    authorId: authors[0].id
                 }}
                 validationSchema={Yup.object().shape({
                     title: Yup.string().required('Title is required'),
@@ -29,7 +34,6 @@ const BookForm = ({ getBooks}) => {
                 })}
                 onSubmit={(values, {setSubmitting, resetForm}) => {
                     setSubmitting(true);
-                    console.log(values);
                     client.createBookApi(values).then(getBooks);
                     setSubmitting(false);
                     resetForm();
@@ -58,21 +62,25 @@ const BookForm = ({ getBooks}) => {
                             </Grid>
                             <Grid item>
                                 <Field
-                                    fullWidth
+                                    component={Select}
                                     id="categoryId"
                                     name="categoryId"
                                     label="Category ID"
-                                    component={TextField}
-                                />
+                                >{categories.map((category, i) => (
+                                    <MenuItem key={i} value={category.id}>{category.title}</MenuItem>
+                                ))}
+                                </Field>
                             </Grid>
                             <Grid item>
                                 <Field
-                                    fullWidth
+                                    component={Select}
                                     id="authorId"
                                     name="authorId"
                                     label="Author ID"
-                                    component={TextField}
-                                />
+                                >{authors.map((author, i) => (
+                                    <MenuItem key={i} value={author.id}>{author.name}</MenuItem>
+                                ))}
+                                </Field>
                             </Grid>
                             <Grid item>
                                 <Button
